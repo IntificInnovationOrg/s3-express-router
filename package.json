@@ -1,0 +1,28 @@
+{
+  "name": "s3-express-router",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IntificInnovationOrg/s3-express-router.git"
+  },
+  "author": "Thomas Phan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IntificInnovationOrg/s3-express-router/issues"
+  },
+  "homepage": "https://github.com/IntificInnovationOrg/s3-express-router#readme",
+  "dependencies": {
+    "aws-sdk": "^2.308.0",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.2.13",
+    "multer": "^1.3.1",
+    "multer-s3": "^2.7.0",
+    "multiparty": "^4.2.1"
+  }
+}
