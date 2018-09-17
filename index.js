@@ -47,20 +47,20 @@ const objectIdMiddleware = (req, res, next) => {
 
 const getStorageEngine = accessKeyId => secretAccessKey => bucket => {
   const acl = 'private';
-  
+
   const contentType = (req, file, cb) => {
     cb(null, fp.get('mimetype')(file));
   };
 
   const key = (req, file, cb) => {
     cb(null, getS3ObjectKey(file));
-  };  
-  
+  };
+
   const s3 = new AWS.S3({
     accessKeyId,
     secretAccessKey,
-  });  
-  
+  });
+
   return multerS3({
     acl,
     bucket,
@@ -99,16 +99,5 @@ module.exports.getSignedUrl = accessKeyId => secretAccessKey => Bucket => Expire
     Expires,
   };
 
-  return new Promise((resolve, reject) => {
-    const cb = (err, url) => {
-      fp.cond
-        ([
-          [fp.identity, reject],
-          [fp.stubTrue, fp.wrap(resolve)(url)],
-        ])
-        (err);
-    };
-
-    s3.getSignedUrl('getObject', params, cb);
-  });
+  return s3.getSignedUrl('getObject', params);
 };
