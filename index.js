@@ -18,14 +18,12 @@ const keyToObjectId = fp.pipe([
 ]);
 
 const assignObjectId = file => (
-  fp.pipe
-    ([
-      fp.get('key'),
-      keyToObjectId,
-      objectId => ({ objectId }),
-      fp.assign(file),
-    ])
-    (file)
+  fp.pipe([
+    fp.get('key'),
+    keyToObjectId,
+    objectId => ({ objectId }),
+    fp.assign(file),
+  ])(file)
 );
 
 const validateFile = fp.cond([
@@ -35,17 +33,15 @@ const validateFile = fp.cond([
 ]);
 
 const objectIdMiddleware = (req, res, next) => {
-  fp.pipe
-    ([
-      fp.get('file'),
-      fp.cond([[validateFile, assignObjectId]]),
-    ])
-    (req);
+  fp.pipe([
+    fp.get('file'),
+    fp.cond([[validateFile, assignObjectId]]),
+  ])(req);
 
   next();
 };
 
-const getStorageEngine = accessKeyId => secretAccessKey => bucket => {
+const getStorageEngine = accessKeyId => secretAccessKey => (bucket) => {
   const acl = 'private';
 
   const contentType = (req, file, cb) => {
@@ -70,24 +66,21 @@ const getStorageEngine = accessKeyId => secretAccessKey => bucket => {
   });
 };
 
-module.exports.getRouter = accessKeyId => secretAccessKey => bucket => {
-  const storage = getStorageEngine
-    (accessKeyId)
-    (secretAccessKey)
-    (bucket);
+module.exports.getRouter = accessKeyId => secretAccessKey => (bucket) => {
+  const storage = getStorageEngine(accessKeyId)(secretAccessKey)(bucket);
 
   const router = require('express').Router();
 
   router.post(
     '*',
     multer({ storage }).single('file'),
-    objectIdMiddleware
+    objectIdMiddleware,
   );
 
   return router;
 };
 
-module.exports.getSignedUrl = accessKeyId => secretAccessKey => Bucket => Expires => Key => {
+module.exports.getSignedUrl = accessKeyId => secretAccessKey => Bucket => Expires => (Key) => {
   const s3 = new AWS.S3({
     accessKeyId,
     secretAccessKey,
